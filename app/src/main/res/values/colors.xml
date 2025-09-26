@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    
+    <!-- App specific colors -->
+    <color name="background_gray">#F5F5F5</color>
+    <color name="text_black">#333333</color>
+    <color name="text_gray">#666666</color>
+    <color name="button_blue">#7B9FE0</color>
+    <color name="indicator_active">#333333</color>
+    <color name="indicator_inactive">#CCCCCC</color>
+    
+    <!-- Sign in specific -->
+    <color name="input_bg">#F3F3EC</color>
+    <color name="input_hint">#A1A193</color>
+    <color name="error_text">#8B8A46</color>
+</resources>
