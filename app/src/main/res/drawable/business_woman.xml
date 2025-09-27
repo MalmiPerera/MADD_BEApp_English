@@ -15,12 +15,10 @@
         android:fillColor="#A52A2A"
         android:pathData="M60,80 Q100,70 140,80 L140,250 Q100,260 60,250 Z" />
     
-    <!-- Face area -->
-    <circle
+    <!-- Face area (circle as path) -->
+    <path
         android:fillColor="#FDBCB4"
-        android:cx="100"
-        android:cy="60"
-        android:radius="25" />
+        android:pathData="M100,35 a25,25 0 1,0 0,50 a25,25 0 1,0 0,-50" />
     
     <!-- Hair -->
     <path
