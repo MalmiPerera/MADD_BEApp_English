@@ -117,7 +117,7 @@ fun AppNavHost(nav: NavHostController) {
 
         // Lesson and attachments
         composable(Routes.Lesson) { LessonScreen { nav.navigate(Routes.Attachments) } }
-        composable(Routes.Attachments) { AttachmentsScreen() }
+        composable(Routes.Attachments) { AttachmentsScreen(onBack = { nav.popBackStack() }) }
 
         // Quiz flow
         composable(Routes.QuizStart) { QuizStartScreen { nav.navigate(Routes.QuizQuestion) } }
@@ -134,7 +134,10 @@ fun AppNavHost(nav: NavHostController) {
                         launchSingleTop = true
                         restoreState = true
                     }
-                }
+                },
+                onBack = { nav.popBackStack() },
+                onViewCourse = { nav.navigate(Routes.CourseDetail) },
+                onShare = { /* TODO: Implement share sheet */ }
             )
         }
 

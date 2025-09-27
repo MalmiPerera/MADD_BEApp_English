@@ -18,7 +18,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.InsertDriveFile
+import androidx.compose.material.icons.outlined.CheckCircle
 import lk.madd.be_businessenglish.R
 import lk.madd.be_businessenglish.Routes
 
@@ -195,7 +197,7 @@ fun SignUpScreen(onBack: () -> Unit, onSignedUp: () -> Unit) {
             ) {
                 IconButton(onClick = onBack) {
                     Icon(
-                        imageVector = Icons.Filled.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back"
                     )
                 }
@@ -336,7 +338,62 @@ fun HomeScreen(nav: NavController) {
         Button(onClick = { /* test */ }) { Text("Test Yourself") }
     }
 }
-@Composable fun AttachmentsScreen() { SimpleCenter("Attachments") }
+@Composable
+fun AttachmentsScreen(onBack: () -> Unit) {
+    val items = listOf(
+        "Slides.pdf" to R.drawable.home_placeholder,
+        "Worksheet.docx" to R.drawable.home_placeholder,
+        "Reference.txt" to R.drawable.home_placeholder,
+        "Notes.md" to R.drawable.home_placeholder
+    )
+
+    Column(Modifier.fillMaxSize()) {
+        // Top bar with back and centered title
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = onBack) {
+                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+            }
+            Spacer(Modifier.weight(1f))
+            Text("Attachments", fontWeight = FontWeight.Bold)
+            Spacer(Modifier.weight(1f))
+            Spacer(Modifier.width(24.dp))
+        }
+
+        Divider()
+
+        // Attachment list
+        Column(Modifier.fillMaxWidth()) {
+            items.forEachIndexed { index, (label, _) ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 14.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.InsertDriveFile,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(Modifier.width(12.dp))
+                    Text(label, modifier = Modifier.weight(1f))
+                    Spacer(Modifier.width(12.dp))
+                    Icon(
+                        imageVector = Icons.Outlined.CheckCircle,
+                        contentDescription = "Downloaded",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                if (index < items.lastIndex) Divider()
+            }
+        }
+    }
+}
 @Composable fun TestScreen(onFinish: () -> Unit) {
     Column(Modifier.fillMaxSize().padding(16.dp)) {
         Text("Question 1/5: Which of the following is the best way to start a business meeting?")
@@ -436,10 +493,107 @@ fun QuizQuestionScreen(onComplete: () -> Unit) {
 }
 
 @Composable
-fun CourseCompletedScreen(onGoToMyLearning: () -> Unit) {
-    Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-        Text("Course Completed!", fontWeight = FontWeight.Bold)
-        Spacer(Modifier.height(12.dp))
-        Button(onClick = onGoToMyLearning) { Text("Go to My Learning") }
+fun CourseCompletedScreen(
+    onGoToMyLearning: () -> Unit,
+    onBack: () -> Unit = {},
+    onViewCourse: () -> Unit = {},
+    onShare: () -> Unit = {}
+) {
+    Column(Modifier.fillMaxSize()) {
+        // Top bar
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = onBack) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back"
+                )
+            }
+            Spacer(Modifier.weight(1f))
+            Text("Course Completed", fontWeight = FontWeight.Bold)
+            Spacer(Modifier.weight(1f))
+            Spacer(Modifier.width(24.dp))
+        }
+
+        // Congratulation card
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+            ),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Column(Modifier.fillMaxWidth().padding(16.dp)) {
+                Text("Congratulations, Alex!", fontWeight = FontWeight.Bold)
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    "You've successfully completed the 'Effective Communication' course. Keep up the great work!",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(Modifier.height(12.dp))
+                Surface(
+                    tonalElevation = 0.dp,
+                    shape = RoundedCornerShape(8.dp),
+                    color = MaterialTheme.colorScheme.surface
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.home_placeholder),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(140.dp)
+                    )
+                }
+            }
+        }
+
+        Spacer(Modifier.height(16.dp))
+        // Next in Track label
+        Text(
+            "Next in Track",
+            modifier = Modifier.padding(horizontal = 16.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        Spacer(Modifier.height(8.dp))
+        // Thumbnail + Buttons row
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Surface(
+                tonalElevation = 0.dp,
+                shape = RoundedCornerShape(6.dp),
+                color = MaterialTheme.colorScheme.surface
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.home_placeholder),
+                    contentDescription = null,
+                    modifier = Modifier.size(64.dp)
+                )
+            }
+            Spacer(Modifier.width(16.dp))
+            OutlinedButton(onClick = onViewCourse) { Text("VIEW COURSE") }
+            Spacer(Modifier.width(12.dp))
+            OutlinedButton(onClick = onShare) { Text("SHARE") }
+        }
+
+        Spacer(Modifier.height(24.dp))
+
+        // Primary CTA back to My Learning
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Button(onClick = onGoToMyLearning) { Text("Go to My Learning") }
+        }
     }
 }
