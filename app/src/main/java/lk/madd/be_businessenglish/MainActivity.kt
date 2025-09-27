@@ -25,6 +25,11 @@ import lk.madd.be_businessenglish.ui.SignInScreen
 import lk.madd.be_businessenglish.ui.SignUpScreen
 import lk.madd.be_businessenglish.ui.TestScreen
 import lk.madd.be_businessenglish.ui.QuizResultScreen
+import lk.madd.be_businessenglish.ui.CourseDetailScreen
+import lk.madd.be_businessenglish.ui.CoursePlayerScreen
+import lk.madd.be_businessenglish.ui.QuizStartScreen
+import lk.madd.be_businessenglish.ui.QuizQuestionScreen
+import lk.madd.be_businessenglish.ui.CourseCompletedScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,36 +51,94 @@ object Routes {
     const val Profile = "profile"
     const val Settings = "settings"
     const val Lesson = "lesson"
+    const val CourseDetail = "course_detail"
+    const val CoursePlayer = "course_player"
+    const val QuizStart = "quiz_start"
+    const val QuizQuestion = "quiz_question"
+    const val CourseCompleted = "course_completed"
     const val Attachments = "attachments"
-    const val Test = "test"
-    const val QuizResult = "quizresult"
     const val Notifications = "notifications"
 }
 
 @Composable
 fun AppRoot() {
     val nav = rememberNavController()
-    Surface(color = MaterialTheme.colorScheme.background) {
-        AppNavHost(nav)
-    }
+    Surface(color = MaterialTheme.colorScheme.background) { AppNavHost(nav) }
 }
 
 @Composable
 fun AppNavHost(nav: NavHostController) {
     NavHost(navController = nav, startDestination = Routes.Onboard) {
+        // Entry / Auth
         composable(Routes.Onboard) { OnboardScreen { nav.navigate(Routes.SignIn) } }
-        composable(Routes.SignIn) { SignInScreen(onSignIn = { nav.navigate(Routes.Home) }, onCreateAccount = { nav.navigate(Routes.SignUp) }, onForgot = { }) }
-        composable(Routes.SignUp) { SignUpScreen(onBack = { nav.popBackStack() }, onSignedUp = { nav.navigate(Routes.Home) }) }
+        composable(Routes.SignIn) {
+            SignInScreen(
+                onSignIn = {
+                    nav.navigate(Routes.Home) {
+                        popUpTo(Routes.Onboard) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
+                onCreateAccount = { nav.navigate(Routes.SignUp) },
+                onForgot = { /* TODO: forgot */ }
+            )
+        }
+        composable(Routes.SignUp) {
+            SignUpScreen(
+                onBack = { nav.popBackStack() },
+                onSignedUp = {
+                    nav.navigate(Routes.Home) {
+                        popUpTo(Routes.Onboard) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+
+        // Primary tabs
         composable(Routes.Home) { HomeScreen(nav) }
         composable(Routes.Courses) { CoursesScreen() }
         composable(Routes.MyLearning) { MyLearningScreen() }
         composable(Routes.Downloads) { DownloadsScreen() }
         composable(Routes.Profile) { ProfileScreen { nav.navigate(Routes.Settings) } }
         composable(Routes.Settings) { SettingsScreen() }
+
+        // Course funnel
+        composable(Routes.CourseDetail) { CourseDetailScreen(
+            onEnroll = { nav.navigate(Routes.CoursePlayer) },
+            onPreview = { nav.navigate(Routes.Lesson) },
+            onAttachments = { nav.navigate(Routes.Attachments) }
+        ) }
+        composable(Routes.CoursePlayer) { CoursePlayerScreen(
+            onOpenLesson = { nav.navigate(Routes.Lesson) },
+            onDownloadAll = { nav.navigate(Routes.Downloads) },
+            onStartQuiz = { nav.navigate(Routes.QuizStart) }
+        ) }
+
+        // Lesson and attachments
         composable(Routes.Lesson) { LessonScreen { nav.navigate(Routes.Attachments) } }
         composable(Routes.Attachments) { AttachmentsScreen() }
-        composable(Routes.Test) { TestScreen { nav.navigate(Routes.QuizResult) } }
-        composable(Routes.QuizResult) { QuizResultScreen { nav.navigate(Routes.Home) } }
+
+        // Quiz flow
+        composable(Routes.QuizStart) { QuizStartScreen { nav.navigate(Routes.QuizQuestion) } }
+        composable(Routes.QuizQuestion) {
+            QuizQuestionScreen(
+                onComplete = { nav.navigate(Routes.CourseCompleted) { launchSingleTop = true } }
+            )
+        }
+        composable(Routes.CourseCompleted) {
+            CourseCompletedScreen(
+                onGoToMyLearning = {
+                    nav.navigate(Routes.MyLearning) {
+                        popUpTo(Routes.Home) { saveState = true }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            )
+        }
+
+        // Notifications
         composable(Routes.Notifications) { NotificationsScreen() }
     }
 }

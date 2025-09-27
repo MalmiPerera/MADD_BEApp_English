@@ -309,7 +309,7 @@ fun HomeScreen(nav: NavController) {
             Spacer(Modifier.height(8.dp))
             Text("Skill Tracks: Meetings, Presentations, Negotiation ...")
             Spacer(Modifier.height(24.dp))
-            Button(onClick = { nav.navigate(Routes.Lesson) }) { Text("Open a Lesson") }
+            Button(onClick = { nav.navigate(Routes.CourseDetail) }) { Text("Open Featured Course") }
         }
     }
 }
@@ -362,4 +362,84 @@ private fun SimpleCenter(label: String) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) { Text(label) }
+}
+
+// --- New screens for journeys ---
+
+@Composable
+fun CourseDetailScreen(
+    onEnroll: () -> Unit,
+    onPreview: () -> Unit,
+    onAttachments: () -> Unit
+) {
+    Column(Modifier.fillMaxSize().padding(16.dp)) {
+        Text("Course Detail", fontWeight = FontWeight.Bold)
+        Spacer(Modifier.height(12.dp))
+        Text("Overview, lessons, instructors, ratings")
+        Spacer(Modifier.height(16.dp))
+        Button(onClick = onEnroll, modifier = Modifier.fillMaxWidth()) { Text("Enroll / Start Course") }
+        Spacer(Modifier.height(8.dp))
+        OutlinedButton(onClick = onPreview, modifier = Modifier.fillMaxWidth()) { Text("Preview lesson") }
+        Spacer(Modifier.height(8.dp))
+        TextButton(onClick = onAttachments) { Text("Attachments") }
+    }
+}
+
+@Composable
+fun CoursePlayerScreen(
+    onOpenLesson: () -> Unit,
+    onDownloadAll: () -> Unit,
+    onStartQuiz: () -> Unit
+) {
+    Column(Modifier.fillMaxSize().padding(16.dp)) {
+        Text("Course Player", fontWeight = FontWeight.Bold)
+        Spacer(Modifier.height(12.dp))
+        Button(onClick = onOpenLesson, modifier = Modifier.fillMaxWidth()) { Text("Open First Lesson") }
+        Spacer(Modifier.height(8.dp))
+        OutlinedButton(onClick = onDownloadAll, modifier = Modifier.fillMaxWidth()) { Text("Download all lessons") }
+        Spacer(Modifier.height(8.dp))
+        Button(onClick = onStartQuiz, modifier = Modifier.fillMaxWidth()) { Text("Start Course Quiz") }
+    }
+}
+
+@Composable
+fun QuizStartScreen(onStart: () -> Unit) {
+    Column(Modifier.fillMaxSize().padding(16.dp)) {
+        Text("Quiz Instructions", fontWeight = FontWeight.Bold)
+        Spacer(Modifier.height(12.dp))
+        Text("10 questions • 10 minutes")
+        Spacer(Modifier.height(16.dp))
+        Button(onClick = onStart, modifier = Modifier.fillMaxWidth()) { Text("Start Quiz") }
+    }
+}
+
+@Composable
+fun QuizQuestionScreen(onComplete: () -> Unit) {
+    var idx by remember { mutableStateOf(1) }
+    val total = 3
+    Column(Modifier.fillMaxSize().padding(16.dp)) {
+        Text("Question $idx/$total")
+        Spacer(Modifier.height(12.dp))
+        repeat(4) { i ->
+            OutlinedButton(onClick = { /* select */ }, modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+                Text("Option ${i + 1}")
+            }
+        }
+        Spacer(Modifier.height(16.dp))
+        Button(
+            onClick = {
+                if (idx >= total) onComplete() else idx++
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) { Text(if (idx >= total) "Submit" else "Next") }
+    }
+}
+
+@Composable
+fun CourseCompletedScreen(onGoToMyLearning: () -> Unit) {
+    Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+        Text("Course Completed!", fontWeight = FontWeight.Bold)
+        Spacer(Modifier.height(12.dp))
+        Button(onClick = onGoToMyLearning) { Text("Go to My Learning") }
+    }
 }
