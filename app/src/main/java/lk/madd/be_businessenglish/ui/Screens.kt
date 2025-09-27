@@ -17,6 +17,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import lk.madd.be_businessenglish.R
 import lk.madd.be_businessenglish.Routes
 
@@ -193,7 +195,7 @@ fun SignUpScreen(onBack: () -> Unit, onSignedUp: () -> Unit) {
             ) {
                 IconButton(onClick = onBack) {
                     Icon(
-                        imageVector = androidx.compose.material.icons.Icons.Default.ArrowBack,
+                        imageVector = Icons.Filled.ArrowBack,
                         contentDescription = "Back"
                     )
                 }
